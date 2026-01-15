@@ -2,7 +2,11 @@ const initSqlJs = require('sql.js');
 const fs = require('fs');
 const path = require('path');
 
-const dbPath = path.join(__dirname, '..', '..', 'database.sqlite');
+// Use /app/data for Railway Volume (persistent), fallback to project root for local dev
+const dataDir = fs.existsSync('/app/data') ? '/app/data' : path.join(__dirname, '..', '..');
+const dbPath = path.join(dataDir, 'database.sqlite');
+
+console.log('📁 Database path:', dbPath);
 
 let db = null;
 
