@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luna English CRM - Quản lý học sinh</title>
+  <meta name="description" content="Hệ thống CRM quản lý học sinh cho trung tâm Luna English">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Login Page -->
+    <div id="login-page" class="page">
+      <div class="login-container">
+        <div class="login-card">
+          <div class="login-header">
+            <div class="logo">
+              <span class="logo-icon">🌙</span>
+              <h1>Luna English</h1>
+            </div>
+            <p class="login-subtitle">Hệ thống quản lý học sinh</p>
+          </div>
+          <form id="login-form">
+            <div class="form-group">
+              <label for="username">Tên đăng nhập</label>
+              <input type="text" id="username" name="username" placeholder="Nhập tên đăng nhập" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Mật khẩu</label>
+              <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+            </div>
+            <div id="login-error" class="error-message"></div>
+            <button type="submit" class="btn btn-primary btn-block">
+              <span>Đăng nhập</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="hidden">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <span class="logo-icon">🌙</span>
+          <span class="logo-text">Luna English</span>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" data-page="dashboard">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item" data-page="students">
+            <span class="nav-icon">👨‍🎓</span>
+            <span>Học sinh</span>
+          </a>
+          <a href="#" class="nav-item admin-only" data-page="users">
+            <span class="nav-icon">👥</span>
+            <span>Nhân viên</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <div class="user-avatar" id="user-avatar">A</div>
+            <div class="user-details">
+              <span class="user-name" id="user-name">Admin</span>
+              <span class="user-role" id="user-role">Quản trị viên</span>
+            </div>
+          </div>
+          <button id="logout-btn" class="btn-logout">
+            <span>🚪</span>
+            <span>Đăng xuất</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="content-page">
+          <div class="page-header">
+            <h2>Dashboard</h2>
+            <p class="page-subtitle">Tổng quan hệ thống</p>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-card" id="stat-total">
+              <div class="stat-icon">👨‍🎓</div>
+              <div class="stat-info">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Tổng học sinh</span>
+              </div>
+            </div>
+            <div class="stat-card" id="stat-new">
+              <div class="stat-icon">✨</div>
+              <div class="stat-info">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Mới tháng này</span>
+              </div>
+            </div>
+            <div class="stat-card" id="stat-registered">
+              <div class="stat-icon">✅</div>
+              <div class="stat-info">
+                <span class="stat-number">0%</span>
+                <span class="stat-label">Tỷ lệ chuyển đổi</span>
+              </div>
+            </div>
+            <div class="stat-card" id="stat-followup">
+              <div class="stat-icon">📞</div>
+              <div class="stat-info">
+                <span class="stat-number">0</span>
+                <span class="stat-label">Cần follow-up</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>📈 Thống kê theo trạng thái</h3>
+              </div>
+              <div class="card-body">
+                <div id="status-chart" class="chart-container"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3>📚 Thống kê theo khóa học</h3>
+              </div>
+              <div class="card-body">
+                <div id="course-chart" class="chart-container"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>🆕 Học sinh mới nhất</h3>
+              </div>
+              <div class="card-body">
+                <div id="recent-students" class="recent-list"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3>📞 Cần liên hệ hôm nay</h3>
+              </div>
+              <div class="card-body">
+                <div id="followup-list" class="followup-list"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Students Page -->
+        <div id="students-page" class="content-page hidden">
+          <div class="page-header">
+            <div>
+              <h2>Quản lý học sinh</h2>
+              <p class="page-subtitle">Danh sách học sinh của trung tâm</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-outline" id="export-excel-btn">
+                <span>📥</span> Xuất Excel
+              </button>
+              <button class="btn btn-primary" id="add-student-btn">
+                <span>➕</span> Thêm học sinh
+              </button>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="filters-bar">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="search-input" placeholder="Tìm theo tên, SĐT...">
+            </div>
+            <select id="filter-status" class="filter-select">
+              <option value="">Tất cả trạng thái</option>
+            </select>
+            <select id="filter-course" class="filter-select">
+              <option value="">Tất cả khóa học</option>
+            </select>
+            <select id="filter-source" class="filter-select">
+              <option value="">Tất cả nguồn</option>
+            </select>
+          </div>
+
+          <!-- Students Table -->
+          <div class="card">
+            <div class="table-container">
+              <table class="data-table" id="students-table">
+                <thead>
+                  <tr>
+                    <th>Họ tên</th>
+                    <th>Phụ huynh</th>
+                    <th>SĐT</th>
+                    <th>Khóa học</th>
+                    <th>Trạng thái</th>
+                    <th>Nguồn</th>
+                    <th>Phụ trách</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="students-tbody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Page (Admin Only) -->
+        <div id="users-page" class="content-page hidden">
+          <div class="page-header">
+            <div>
+              <h2>Quản lý nhân viên</h2>
+              <p class="page-subtitle">Danh sách nhân viên hệ thống</p>
+            </div>
+            <div class="page-actions">
+              <button class="btn btn-primary" id="add-user-btn">
+                <span>➕</span> Thêm nhân viên
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-container">
+              <table class="data-table" id="users-table">
+                <thead>
+                  <tr>
+                    <th>Họ tên</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Ngày tạo</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="users-tbody">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Student Modal -->
+    <div id="student-modal" class="modal">
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h3 id="student-modal-title">Thêm học sinh mới</h3>
+          <button class="modal-close" id="close-student-modal">&times;</button>
+        </div>
+        <form id="student-form">
+          <div class="modal-body">
+            <div class="form-section">
+              <h4>Thông tin học sinh</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="student-fullName">Họ tên học sinh *</label>
+                  <input type="text" id="student-fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                  <label for="student-dob">Ngày sinh</label>
+                  <input type="date" id="student-dob" name="dateOfBirth">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="student-level">Trình độ tiếng Anh</label>
+                  <select id="student-level" name="englishLevel"></select>
+                </div>
+                <div class="form-group">
+                  <label for="student-course">Khóa học quan tâm</label>
+                  <select id="student-course" name="interestedCourse"></select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h4>Thông tin phụ huynh</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="student-parentName">Tên phụ huynh</label>
+                  <input type="text" id="student-parentName" name="parentName">
+                </div>
+                <div class="form-group">
+                  <label for="student-parentPhone">Số điện thoại</label>
+                  <input type="tel" id="student-parentPhone" name="parentPhone">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="student-parentEmail">Email</label>
+                  <input type="email" id="student-parentEmail" name="parentEmail">
+                </div>
+                <div class="form-group">
+                  <label for="student-parentFacebook">Facebook</label>
+                  <input type="text" id="student-parentFacebook" name="parentFacebook">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h4>Thông tin tư vấn</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="student-source">Nguồn liên hệ</label>
+                  <select id="student-source" name="leadSource"></select>
+                </div>
+                <div class="form-group">
+                  <label for="student-status">Trạng thái</label>
+                  <select id="student-status" name="status"></select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="student-notes">Ghi chú</label>
+                <textarea id="student-notes" name="notes" rows="3"></textarea>
+              </div>
+              <div id="status-suggestion" class="suggestion-box"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="cancel-student-btn">Hủy</button>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div id="student-detail-modal" class="modal">
+      <div class="modal-content modal-xl">
+        <div class="modal-header">
+          <h3>Chi tiết học sinh</h3>
+          <button class="modal-close" id="close-detail-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="detail-layout">
+            <div class="detail-info">
+              <div id="student-detail-content"></div>
+            </div>
+            <div class="detail-history">
+              <div class="history-header">
+                <h4>📝 Lịch sử tư vấn</h4>
+                <button class="btn btn-sm btn-primary" id="add-history-btn">+ Thêm</button>
+              </div>
+              <div id="history-list" class="history-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add History Modal -->
+    <div id="history-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Thêm lịch sử tư vấn</h3>
+          <button class="modal-close" id="close-history-modal">&times;</button>
+        </div>
+        <form id="history-form">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="history-type">Hình thức liên hệ</label>
+              <select id="history-type" name="contactType"></select>
+            </div>
+            <div class="form-group">
+              <label for="history-content">Nội dung *</label>
+              <textarea id="history-content" name="content" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="history-nextAction">Hành động tiếp theo</label>
+              <input type="text" id="history-nextAction" name="nextAction">
+            </div>
+            <div class="form-group">
+              <label for="history-nextDate">Ngày liên hệ tiếp</label>
+              <input type="date" id="history-nextDate" name="nextContactDate">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="cancel-history-btn">Hủy</button>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="user-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="user-modal-title">Thêm nhân viên mới</h3>
+          <button class="modal-close" id="close-user-modal">&times;</button>
+        </div>
+        <form id="user-form">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="user-fullName">Họ tên *</label>
+              <input type="text" id="user-fullName" name="fullName" required>
+            </div>
+            <div class="form-group">
+              <label for="user-username">Tên đăng nhập *</label>
+              <input type="text" id="user-username" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="user-password">Mật khẩu *</label>
+              <input type="password" id="user-password" name="password">
+              <small class="form-hint" id="password-hint">Để trống nếu không muốn đổi mật khẩu</small>
+            </div>
+            <div class="form-group">
+              <label for="user-email">Email</label>
+              <input type="email" id="user-email" name="email">
+            </div>
+            <div class="form-group">
+              <label for="user-role">Vai trò *</label>
+              <select id="user-role" name="role" required>
+                <option value="consultant">Tư vấn viên</option>
+                <option value="manager">Quản lý</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="cancel-user-btn">Hủy</button>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

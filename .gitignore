@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Database - don't commit to git (will be created on server)
+database.sqlite
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+.env.production
