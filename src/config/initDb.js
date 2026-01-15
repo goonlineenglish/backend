@@ -33,6 +33,8 @@ const initDatabase = async () => {
       interestedCourse TEXT,
       leadSource TEXT,
       status TEXT DEFAULT 'Mới',
+      testResult TEXT,
+      assignedClass TEXT,
       notes TEXT,
       assignedTo INTEGER,
       createdBy INTEGER,

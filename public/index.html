@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <div id="app">
     <!-- Login Page -->
@@ -86,7 +88,7 @@
             <h2>Dashboard</h2>
             <p class="page-subtitle">Tổng quan hệ thống</p>
           </div>
-          
+
           <div class="stats-grid">
             <div class="stat-card" id="stat-total">
               <div class="stat-icon">👨‍🎓</div>
@@ -319,6 +321,16 @@
                   <select id="student-status" name="status"></select>
                 </div>
               </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="student-testResult">Kết quả test</label>
+                  <input type="text" id="student-testResult" name="testResult" placeholder="VD: 7.5/10, Level A2...">
+                </div>
+                <div class="form-group" id="assigned-class-group">
+                  <label for="student-assignedClass">Xếp vào lớp</label>
+                  <input type="text" id="student-assignedClass" name="assignedClass" placeholder="VD: Buttercup 1A">
+                </div>
+              </div>
               <div class="form-group">
                 <label for="student-notes">Ghi chú</label>
                 <textarea id="student-notes" name="notes" rows="3"></textarea>
@@ -442,4 +454,5 @@
   <script src="js/api.js"></script>
   <script src="js/app.js"></script>
 </body>
+
 </html>

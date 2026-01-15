@@ -86,7 +86,7 @@ const studentController = {
             const {
                 fullName, dateOfBirth, parentName, parentPhone, parentEmail,
                 parentFacebook, englishLevel, interestedCourse, leadSource,
-                status, notes, assignedTo
+                status, testResult, assignedClass, notes, assignedTo
             } = req.body;
 
             if (!fullName) {
@@ -97,12 +97,13 @@ const studentController = {
           INSERT INTO students (
             fullName, dateOfBirth, parentName, parentPhone, parentEmail,
             parentFacebook, englishLevel, interestedCourse, leadSource,
-            status, notes, assignedTo, createdBy
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            status, testResult, assignedClass, notes, assignedTo, createdBy
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).run(
                 fullName, dateOfBirth || null, parentName || null, parentPhone || null,
                 parentEmail || null, parentFacebook || null, englishLevel || null,
                 interestedCourse || null, leadSource || null, status || 'Mới',
+                testResult || null, assignedClass || null,
                 notes || null, assignedTo || req.user.id, req.user.id
             );
 
@@ -143,14 +144,15 @@ const studentController = {
         const {
             fullName, dateOfBirth, parentName, parentPhone, parentEmail,
             parentFacebook, englishLevel, interestedCourse, leadSource,
-            status, notes, assignedTo
+            status, testResult, assignedClass, notes, assignedTo
         } = req.body;
 
         db.prepare(`
       UPDATE students SET
         fullName = ?, dateOfBirth = ?, parentName = ?, parentPhone = ?,
         parentEmail = ?, parentFacebook = ?, englishLevel = ?,
-        interestedCourse = ?, leadSource = ?, status = ?, notes = ?,
+        interestedCourse = ?, leadSource = ?, status = ?, 
+        testResult = ?, assignedClass = ?, notes = ?,
         assignedTo = ?, updatedAt = CURRENT_TIMESTAMP
       WHERE id = ?
     `).run(
@@ -164,6 +166,8 @@ const studentController = {
             interestedCourse || student.interestedCourse,
             leadSource || student.leadSource,
             status || student.status,
+            testResult !== undefined ? testResult : student.testResult,
+            assignedClass !== undefined ? assignedClass : student.assignedClass,
             notes !== undefined ? notes : student.notes,
             assignedTo || student.assignedTo,
             studentId

@@ -467,9 +467,14 @@
             $('#student-course').value = student.interestedCourse || '';
             $('#student-source').value = student.leadSource || '';
             $('#student-status').value = student.status || 'Mới';
+            $('#student-testResult').value = student.testResult || '';
+            $('#student-assignedClass').value = student.assignedClass || '';
             $('#student-notes').value = student.notes || '';
             updateStatusSuggestion();
         }
+
+        // Show/hide assigned class based on status
+        updateClassFieldVisibility();
 
         $('#student-modal').classList.add('active');
     }
@@ -493,6 +498,8 @@
             interestedCourse: $('#student-course').value || null,
             leadSource: $('#student-source').value || null,
             status: $('#student-status').value || 'Mới',
+            testResult: $('#student-testResult').value || null,
+            assignedClass: $('#student-assignedClass').value || null,
             notes: $('#student-notes').value || null
         };
 
@@ -515,6 +522,20 @@
         const status = $('#student-status').value;
         const suggestion = constants.statusSuggestions?.[status] || '';
         $('#status-suggestion').textContent = suggestion ? `💡 Đề xuất: ${suggestion}` : '';
+        updateClassFieldVisibility();
+    }
+
+    // Show "Assigned Class" field only when status is "Đã đăng ký"
+    function updateClassFieldVisibility() {
+        const status = $('#student-status').value;
+        const classGroup = $('#assigned-class-group');
+        if (classGroup) {
+            if (status === 'Đã đăng ký') {
+                classGroup.style.display = 'block';
+            } else {
+                classGroup.style.display = 'none';
+            }
+        }
     }
 
     // Make functions global for onclick handlers
@@ -600,6 +621,16 @@
         <span class="detail-label">Trạng thái</span>
         <span class="detail-value"><span class="status-badge ${getStatusClass(student.status)}">${student.status}</span></span>
       </div>
+      <div class="detail-row">
+        <span class="detail-label">Kết quả test</span>
+        <span class="detail-value">${student.testResult || '-'}</span>
+      </div>
+      ${student.status === 'Đã đăng ký' && student.assignedClass ? `
+        <div class="detail-row">
+          <span class="detail-label">Xếp lớp</span>
+          <span class="detail-value"><strong>${student.assignedClass}</strong></span>
+        </div>
+      ` : ''}
       ${student.statusSuggestion ? `
         <div class="suggestion-box">💡 ${student.statusSuggestion}</div>
       ` : ''}
